@@ -8,7 +8,9 @@
 
       <div class="main-nav-brand">
         <nuxt-link to="/">
-          <img :src="logoSrc" width="112" :alt="name" />
+          <div class="icon-logo">
+            <span class="is-sr-only">Omaze</span>
+          </div>
         </nuxt-link>
       </div>
 
@@ -99,7 +101,7 @@ export default {
       return this.getLinks('main-menu')
     },
     mobileMenu() {
-      return this.getLinks('mobile-menu')
+      return this.getLinks('main-menu')
     }
   },
   methods: {
@@ -115,7 +117,8 @@ export default {
   left: 0;
   right: 0;
   z-index: 999;
-  background-color: #ffffff;
+  background-color: #1a1a1a;
+  color: #fff;
 }
 
 .main-nav {
@@ -124,7 +127,6 @@ export default {
   justify-content: space-between;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-bottom: 1px solid #d3d3d3;
 }
 
 .main-nav-left,
