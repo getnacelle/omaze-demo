@@ -34,6 +34,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+.text-content /deep/ .post-image {
+  display: block;
+  margin: 0 auto;
+}
 </style>

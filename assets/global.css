@@ -34,6 +34,14 @@
   font-style: normal;
 }
 
+.app .button.is-primary {
+  background-color: #ea2786;
+  color: #ffffff;
+  border: 1px solid transparent;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
 /* Header */
 .global-header {
   position: fixed;
@@ -97,6 +105,10 @@
 
 .nav-flyout .navbar-item img {
   max-height: none;
+}
+
+.global-header .flyout {
+  color: #3b3b3b;
 }
 
 /* Home Hero Banner */
@@ -184,13 +196,10 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
-  border-radius: 0;
   border: 0;
   outline: 0;
   -webkit-box-shadow: none;
           box-shadow: none;
-  background-color: #3b3b3b;
-  color: #fff;
 }
 
 .product .button.is-primary {
@@ -202,7 +211,6 @@
 .product-card .button.is-primary:hover,
 .product-card .button.is-primary:focus {
   opacity: 0.8;
-  background-color: #3b3b3b;
 }
 
 .product-card a {

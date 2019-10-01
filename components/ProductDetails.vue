@@ -21,11 +21,9 @@
         <span>Donations benefit a great cause!</span>
       </div>
     </div>
-    <product-variant-select
-      v-if="currentVariant"
-      :product="product"
-      :variant="currentVariant"
-    />
+    <button class="button is-primary" @click="scrollToEntries">
+      enter now
+    </button>
     <img class="charity-logo" :src="charityLogo" :alt="product.vendor" />
   </div>
 </template>
@@ -87,18 +85,18 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('cart', ['showCart'])
+    ...mapMutations('cart', ['showCart']),
+    scrollToEntries () {
+      const entries = document.querySelector('#product-entries')
+      const rect = entries.getBoundingClientRect()
+
+      window.scrollTo({ top: rect.top, behavior: "smooth" });
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.product-main {
-  float: right;
-  margin-left: 3rem;
-  width: 30%;
-}
-
 .price {
   margin-bottom: 1rem;
 }
