@@ -3,24 +3,25 @@
     <section class="section">
       <div class="container">
         <product-details v-if="product" :product="product" />
-      </div>
-    </section>
-    <section class="section product-meta" v-if="product">
-      <div class="container">
-        <div class="columns">
-          <div class="column is-7">
-            <h4 class="title is-4">What You're Getting</h4>
-            <div class="content">
-              <p>Run a manual sweep of anomalous airborne or electromagnetic readings. Radiation levels in our atmosphere have increased by 3,000 percent. Electromagnetic and subspace wave fronts approaching synchronization. What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon. Do you have sufficient data to compile a holographic simulation?</p>
-            </div>
-          </div>
-          <div class="column is-4 is-offset-1 highlight">
-            <h4 class="title is-4">Our Products</h4>
-            <div class="content">
-              <p>It indicates a synchronic distortion in the areas emanating triolic waves. The cerebellum, the cerebral cortex, the brain stem, the entire nervous system has been depleted of electrochemical energy.</p>
-            </div>
-          </div>
-        </div>
+        <page-content 
+          v-if="product"
+          :page="product.content"
+          :products="[product]"
+        >
+          <template v-slot:section="{ section }">
+            <carousel-content 
+              v-if="section.contentType === 'ContentCarousel'"
+              :section="section"
+            />
+            <text-content
+              v-if="section.contentType === 'ContentText'"
+              :section="section"
+            />
+          </template>
+          <template v-slot:body>
+            <div />
+          </template>
+        </page-content>
       </div>
     </section>
   </div>
@@ -32,13 +33,16 @@ import transformEdges from '~/plugins/utils/transformEdges.js'
 import ProductDetails from '~/components/ProductDetails'
 import { getProduct } from '@nacelle/nacelle-graphql-queries-mixins'
 import productMetafields from '@nacelle/nacelle-vue-components/dist/mixins/productMetafields'
-
 import gql from 'graphql-tag'
+import CarouselContent from '~/components/CarouselContent'
+import TextContent from '~/components/TextContent'
 
 export default {
   mixins: [productMetafields],
   components: {
-    ProductDetails
+    ProductDetails,
+    CarouselContent,
+    TextContent
   },
   data() {
     return {
@@ -131,6 +135,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container /deep/ .page-content > div:first-child,
+.container /deep/ .page-content > div:nth-child(2) {
+  width: 65%;
+}
+
 .price {
   margin-bottom: 1rem;
 }

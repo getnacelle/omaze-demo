@@ -355,3 +355,36 @@
   background-repeat: no-repeat;
   background-size: 12.625em 44.75em;
 }
+
+.icon-phone-money {
+  display: block;
+  background-position: 0em -18.6875em;
+  width: 1.125em;
+  height: 1.6875em;
+  background-image: url('./sprite-icon-2d0f400f.svg');
+  background-repeat: no-repeat;
+  background-size: 12.625em 44.75em;
+  font-size: 1em;
+}
+
+.icon-tickets {
+  display: block;
+  background-position: 0em -37.875em;
+  width: 1.75em;
+  height: 1.625em;
+  background-image: url('./sprite-icon-2d0f400f.svg');
+  background-repeat: no-repeat;
+  background-size: 12.625em 44.75em;
+  font-size: 1em;
+}
+
+.icon-globe {
+  display: block;
+  background-position: 0em -9.75em;
+  width: 1.75em;
+  height: 1.75em;
+  background-image: url('./sprite-icon-2d0f400f.svg');
+  background-repeat: no-repeat;
+  background-size: 12.625em 44.75em;
+  font-size: 1em;
+}
