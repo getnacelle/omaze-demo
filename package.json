@@ -1,7 +1,8 @@
 {
-  "name": "@nacelle/nacelle-starter",
+  "name": "omaze-demo",
   "version": "1.0.0",
   "author": "Nacelle",
+  "repository": "https://github.com/getnacelle/omaze-demo",
   "scripts": {
     "test": "jest",
     "dev": "nuxt",
