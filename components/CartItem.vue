@@ -8,7 +8,6 @@
       <router-link :to="`${pathFragment}${item.handle}`" @click.native="hideCart">
         <product-title class="flyout-item-title" element="h4" :title="item.title" />
       </router-link>
-      <product-variant-title class="flyout-item-variant-title" :title="item.variant.title" />
       <div class="flyout-item-details columns is-marginless is-paddingless">
         <product-price class="flyout-item-price" :price="item.variant.price" />
         <product-quantity-update :product="item" :variant="item.variant" />
