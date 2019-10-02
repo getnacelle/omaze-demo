@@ -110,6 +110,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.contest-product-card {
+  padding: 0.5rem;
+}
+
 .product-card-actions label {
   display: block;
 }
