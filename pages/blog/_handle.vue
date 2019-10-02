@@ -1,56 +1,62 @@
 <template>
   <div class="article-page">
-    <article class="article">
-      <div class="article-hero">
-        <transition name="fade">
-          <interface-featured-media
-            v-if="article && article.featuredMedia"
-            :media="article.featuredMedia"
-          />
-        </transition>
-      </div>
-      <div class="container">
-        <transition name="fadeDelay">
-          <div v-if="article" class="columns is-centered is-multiline">
-            <div class="article-header column is-6 has-text-centered">
-              <!-- 
-              * Edit Blog Article Header *
-                Available slots:
-                name: "tags", data: "tags"
-                name: "title", data: "title"
-                name: "author", data: "author"
-                name: "date", data: "date"
-              -->
+    <div class="container">
+      <div class="columns">
+        <article class="article column is-8">
+          <transition name="fadeDelay">
+            <div v-if="article">
               <blog-article-header
-                :title="article.title"
-                :author="article.author"
-                :tags="article.tags"
-                :publishDate="article.publishDate"
-              >
-                <!-- Extra HTML markup can also be added below the default header content -->
+                  :title="article.title"
+                  :author="article.author"
+                  :tags="article.tags"
+                  :publishDate="article.publishDate"
+                >
+                <template v-slot:date="{ date }">
+                  <p class="article-published">
+                    {{ date }} | 7 Comments
+                  </p>
+                </template>
+                <interface-featured-media
+                  v-if="article && article.featuredMedia"
+                  :media="article.featuredMedia"
+                />
               </blog-article-header>
+              <div class="content">
+                <blog-article-content
+                  :article="article"
+                  :products="collection ? collection.products : []"
+                  shopLookButtonText="Enter this contest!"
+                >
+                  <!-- Extra HTML added after content -->
+                  <nuxt-link :to="'/blog'" class="breadcrumb">Back to Blog</nuxt-link>
+
+                  <template v-slot:product-card="{ product }">
+                    <contest-product-card :product="product" />
+                  </template>
+                </blog-article-content>
+              </div>
             </div>
-            <div class="column is-9 content">
-              <blog-article-content
-                :article="article"
-                :products="collection ? collection.products : []"
-              >
-                <!-- Extra HTML added after content -->
-                <nuxt-link :to="'/blog'" class="breadcrumb">Back to Blog</nuxt-link>
-              </blog-article-content>
-            </div>
-          </div>
-        </transition>
+          </transition>
+        </article>
+        <div class="column is-3 is-offset-1">
+          <trending-articles />
+        </div>
       </div>
-    </article>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { getBlogArticle } from '@nacelle/nacelle-graphql-queries-mixins'
+import ContestProductCard from '~/components/ContestProductCard'
+import TrendingArticles from '~/components/TrendingArticles'
 
 export default {
+  components: {
+    ContestProductCard,
+    TrendingArticles
+  },
   data() {
     return {
       article: null,
@@ -140,42 +146,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.article-hero {
-  height: 300px;
-  background: #f5f5f5;
+@import '~assets/scss/variables';
 
-  @media screen and (min-width: 769px) {
-    height: 400px;
-  }
-
-  /deep/ .featured-media {
-    width: 100%;
-    height: 100%;
-
-    figure,
-    img {
-      width: 100%;
-      height: 100%;
-    }
-
-    img {
-      object-fit: cover;
-    }
-  }
+.article-page {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
-.article .container {
-  position: relative;
-  margin-top: -3rem;
-  padding: 2rem;
-  padding-bottom: 5rem;
-  background-color: #ffffff;
-  border: 1px solid #f5f5f5;
-  max-width: 1024px;
+.article-title {
+  font-family: ClanOT,sans-serif;
+  font-size: 2.25rem;
+  font-weight: 900;
+  font-style: normal;
+  color: inherit;
+  text-rendering: optimizeLegibility;
+  margin-top: 0;
+  margin-bottom: 8px;
+  margin-bottom: .5rem;
+  line-height: 1.2;
+}
+
+.article-published {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  color: $gray;
+  text-transform: uppercase;
 }
 
 .article-tags {
   margin-bottom: 1em;
+}
+
+.article /deep/ .featured-media.nacelle {
+  margin-bottom: 2rem;
 }
 
 .article-body .content {

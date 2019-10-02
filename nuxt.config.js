@@ -43,7 +43,7 @@ export default {
    */
   css: [
     '@nacelle/nacelle-vue-components/dist/base-styles.css',
-    '@/assets/global.css'
+    '@/assets/scss/global.scss'
   ],
 
   env: {

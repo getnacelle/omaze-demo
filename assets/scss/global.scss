@@ -1,0 +1,40 @@
+@import './variables';
+
+/* Global */
+.app {
+  color: #3b3b3b;
+  font-family: 'brandon-grotesque', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.app h1,
+.app h2,
+.app h3,
+.app h4,
+.app h5,
+.app h6 {
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 500;
+}
+
+.app a {
+  font-family: 'brandon-grotesque', sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.app .button.is-primary {
+  background-color: $pink;
+  color: #ffffff;
+  border: 1px solid transparent;
+  font-weight: 700;
+  border-radius: 3px;
+}
+
+@import './modules/header';
+@import './modules/icons';
+@import './modules/product';
+@import './modules/shop-look';
+
+@import './pages/homepage';
