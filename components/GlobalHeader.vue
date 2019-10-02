@@ -34,9 +34,11 @@
     <transition name="slide">
       <div class="nav-flyout" v-if="menuVisible">
         <div class="nav-flyout-header">
-          <router-link class="navbar-item" to="/">
-            <img :src="logoSrc" width="112" :alt="name" />
-          </router-link>
+          <nuxt-link to="/">
+            <div class="icon-logo">
+              <span class="is-sr-only">Omaze</span>
+            </div>
+          </nuxt-link>
           <button class="nav-flyout-close" @click="toggleShowMenu">
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -2,6 +2,9 @@
   <div id="product-entries" class="product-entries">
     <h2 class="title has-text-centered">entry levels</h2>
     <div class="product-entry-popular">
+      <h4>
+        Choose the amount below. No donation or payment is necessary to enter or win this sweepstakes.
+      </h4>
       <div class="entry">
         <div class="entry-flag">most popular!</div>
         <div class="entry-header">
@@ -11,9 +14,6 @@
           <entry-donate-button :product="product" :variant="popularEntry" />
         </div>
       </div>
-      <h4>
-        Choose the amount below. No donation or payment is necessary to enter or win this sweepstakes.
-      </h4>
     </div>
     <ul class="entries" v-if="product">
       <li 
@@ -94,7 +94,10 @@ export default {
 }
 
 .product-entry-popular {
-  display: flex;
+  @media screen and (min-width: 760px) {
+   display: flex;
+   flex-direction: row-reverse;
+  }
 }
 
 .entries {
@@ -108,9 +111,16 @@ export default {
   position: relative;
   margin: 0 1% 0.9375rem;
   padding: 0;
-  width: 31%;
   border: 1px solid #ededed;
   box-shadow: #ededed 1px 1px 3px -1px;
+
+  @media screen and (min-width: 600px) {
+    width: 48%;
+  }
+
+  @media screen and (min-width: 900px) {
+    width: 31%;
+  }
 }
 
 .entry-flag {

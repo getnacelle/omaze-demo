@@ -153,12 +153,20 @@ a {
   justify-content: center;
   padding-bottom: 1.625rem;
   border-bottom: 0.0625rem solid #fff;
+
+  @media screen and (max-width: 800px) {
+    flex-direction: column;
+  }
 }
 
 .footer-menu li {
   flex-grow: 1;
   margin: 0 0.5625rem;
   padding-bottom: 0;
+
+  @media screen and (max-width: 800px) {
+    margin-bottom: 1rem;
+  }
 
   a {
     color: #fff;

@@ -1,22 +1,20 @@
 <template>
   <div class="columns is-multiline is-paddingless" v-if="products">
     <div v-for="product in products" :key="product.id" :class="columnClasses">
-      <product-card
+      <contest-product-card
         v-if="product"
         :product="product"
-        :showQuantityUpdate="showQuantityUpdate"
-        :showAddToCart="showAddToCart"
       />
     </div>
   </div>
 </template>
 
 <script>
-import ProductCard from '~/components/ProductCard'
+import ContestProductCard from '~/components/ContestProductCard'
 
 export default {
   components: {
-    ProductCard
+    ContestProductCard
   },
   props: {
     products: {

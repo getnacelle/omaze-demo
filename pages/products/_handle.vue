@@ -4,7 +4,7 @@
       <div class="container">
         <product-details v-if="product" :product="product" />
         <div class="product-content">
-          <div class="time-remaining">
+          <div v-if="product" class="time-remaining">
             {{ timeRemaining }}
           </div>
           <page-content 
@@ -185,19 +185,26 @@ export default {
 
 <style lang="scss" scoped>
 .product-body .container {
-  display: flex;
+  @media screen and (min-width: 800px) {
+    display: flex;
+  }
 }
 
 .container .product-content {
   position: relative;
-  order: 0;
-  width: 65%;
+  
+  @media screen and (min-width: 800px) {
+    order: 0;
+    width: 65%;
+  }
 }
 
 .container /deep/ .product-main {
-  order: 1;
-  margin-left: 3rem;
-  width: 30%;
+  @media screen and (min-width: 800px) {
+    order: 1;
+    margin-left: 3rem;
+    width: 30%;
+  }
 }
 
 .time-remaining {
