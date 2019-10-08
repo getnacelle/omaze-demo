@@ -174,11 +174,6 @@ export default {
         context: 'component'
       })
     }
-  },
-  mounted() {
-    if (process.browser) {
-      this.$apollo.queries.product.startPolling(5000)
-    }
   }
 }
 </script>
