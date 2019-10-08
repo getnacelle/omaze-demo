@@ -26,7 +26,7 @@
           >{{ link.title }}</nuxt-link>
         </div>
         <search-box class="is-hidden-mobile" />
-        <main-nav-cart />
+        <custom-cart-icon />
       </div>
     </div>
 
@@ -80,8 +80,13 @@
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import Cart from '~/components/Cart'
+import CustomCartIcon from '~/components/CustomCartIcon'
+
 export default {
-  components: { Cart },
+  components: {
+    Cart,
+    CustomCartIcon
+  },
   props: {
     isSticky: {
       type: Boolean,
