@@ -21,6 +21,18 @@
                 v-if="section.contentType === 'ContentText'"
                 :section="section"
               />
+              <content-hero-banner
+                v-if="section.contentType === 'ContentHeroBanner'"
+                v-bind="section.data"
+              />
+              <content-side-by-side
+                v-if="section.contentType === 'ContentSideBySide'"
+                v-bind="section.data"
+              />
+              <content-testimonials
+                v-if="section.contentType === 'ContentTestimonials'"
+                v-bind="section.data"
+              />
             </template>
             <template v-slot:body>
               <div />
