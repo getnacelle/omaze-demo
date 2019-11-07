@@ -1,11 +1,10 @@
 <template>
-  <div class="page page-shop">
+  <div class="page page-shop" v-if="collection">
     <content-hero-banner
       v-if="collection"
       :title="collection.title"
       :backgroundImgUrl="featuredImage"
     />
-    <page-content :page="page" :products="products" />
     <section class="section">
       <div class="container">
         <div class="columns is-multiline">
@@ -23,18 +22,29 @@
 </template>
 
 <script>
+import axios from 'axios'
 import { mapState, mapGetters, mapMutations } from 'vuex'
-import { getCollection } from '@nacelle/nacelle-graphql-queries-mixins'
 import ProductGrid from '~/components/ProductGrid'
+import { fetchStatic } from '@nacelle/nacelle-tools'
+
 export default {
   name: 'home',
   components: { ProductGrid },
   data() {
     return {
+      handle: this.$route.params.handle,
       collection: null
     }
   },
-  mixins: [getCollection],
+  async asyncData(context) {
+    const { params } = context
+    const { handle } = params
+    const collectionData = await fetchStatic.collectionData(handle, context)
+      
+    return {
+      ...collectionData
+    }
+  },
   computed: {
     ...mapGetters('space', ['getMetatag']),
     products() {
@@ -58,6 +68,24 @@ export default {
       }
 
       return null
+    }
+  },
+  created () {
+    if (!this.collection && !this.noCollectionData) {
+      this.$nacelleApollo.getCollection(
+        this.handle,
+        this.$apollo,
+        {
+          error: () => {
+            this.$nacelleHelpers.debugLog('No collection data.')
+          }
+        }
+      )
+    }
+  },
+  methods: {
+    pageError () {
+      this.$nuxt.error({ statusCode: 404, message: 'Page does not exist' })
     }
   },
   head() {
@@ -107,15 +135,7 @@ export default {
         meta
       }
     }
-  },
-  // mounted() {
-  //   if (this.collection && this.collection.products == null) {
-  //     this.$nuxt.error({
-  //       statusCode: 404,
-  //       message: 'That collection could not be found'
-  //     })
-  //   }
-  // }
+  }
 }
 </script>
 <style lang="scss" scoped>

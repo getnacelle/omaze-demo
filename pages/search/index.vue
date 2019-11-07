@@ -12,18 +12,31 @@
     <section class="section">
       <div class="columns">
         <div class="column is-2">
-          <search-filters
-            :filterProperties="[{field:'productType', label:'Product Type'}, {field: `category`, label:'Category'}]"
-            :passingConditions="[ {property: 'productType', conditional:'!=', value:'Blankets'}]"
-            :inputData="productData"
+          <refinement-filters
             v-if="productData"
+            :filterProperties="[
+              {
+                field:'productType',
+                label:'Product Type'
+              },
+              {
+                field: `category`,
+                label:'Category'
+              }
+            ]"
+            :inputData="productData"
             v-on:updated="updateFilteredData"
           />
         </div>
         <div class="column is-10">
-          <search-results :searchData="filteredData" :searchQuery="query" v-if="filteredData">
+          <search-results
+            v-if="filteredData"
+            :searchData="filteredData"
+            :searchQuery="query"
+          >
             <template v-slot:result="{ result }">
               <product-grid :products="result" :columns="3" />
+              <!-- <pre>{{ result.length }}</pre> -->
             </template>
             <template v-slot:no-results>
               <search-no-results />
@@ -36,25 +49,46 @@
 </template>
 
 <script>
-import { allProductsJSON } from '@nacelle/nacelle-graphql-queries-mixins'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
+import ProductGrid from '~/components/ProductGrid'
+
 export default {
-  // components: {
-  //   SearchBox,
-  //   SearchFilters,
-  //   SearchResults,
-  //   SearchNoResults
-  // },
+  components: {
+    ProductGrid
+  },
   data() {
     return {
       filteredData: null
     }
   },
+  computed: {
+    ...mapState('search', ['query', 'loadedData']),
+    ...mapGetters('search', ['productData']),
+  },
+  watch: {
+    loadedData(newVal) {
+      if (newVal) {
+        if (this.$route.query && this.$route.query.q) {
+          this.setQuery({
+            origin: 'in-page',
+            value: this.$route.query.q
+          })
+        }
+      }
+    }
+  },
+  created () {
+    if (process.browser) {
+      this.getProductData()
+    }
+  },
   methods: {
+    ...mapMutations('search', ['setQuery']),
+    ...mapActions('search', ['getProductData']),
     updateFilteredData(data) {
       this.filteredData = data
     }
-  },
-  mixins: [allProductsJSON]
+  }
 }
 </script>
 

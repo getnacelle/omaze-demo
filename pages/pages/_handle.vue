@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <div v-if="$apollo.loading">Loading...</div>
     <page-content :page="page" :products="products">
       <!-- 
         /****
@@ -66,13 +65,69 @@
 </template>
 
 <script>
-import { getPage } from '@nacelle/nacelle-graphql-queries-mixins'
+import { fetchStatic } from '@nacelle/nacelle-tools'
+
 export default {
   data() {
     return {
-      handle: this.$route.params.handle
+      handle: this.$route.params.handle,
+      page: null,
+      collection: null
     }
   },
-  mixins: [getPage]
+  async asyncData(context) {
+    const { params } = context
+    const { handle } = params
+    const pageData = await fetchStatic.pageData(handle, context)
+    const collectionData = await fetchStatic.collectionData(handle, context)
+      
+    return {
+      ...pageData,
+      ...collectionData
+    }
+  },
+  computed: {
+    products () {
+      if (
+        this.collection &&
+        this.collection.products &&
+        Array.isArray(this.collection.products)
+      ) {
+        return this.collection.products
+      }
+
+      return []
+    }
+  },
+  created () {
+    if (!this.collection && !this.noCollectionData) {
+      this.$nacelleApollo.getCollection(
+        this.handle,
+        this.$apollo,
+        {
+          error: () => {
+            this.$nacelleHelpers.debugLog('No collection data.')
+          }
+        }
+      )
+    }
+
+    if (!this.page && !this.noPageData) {
+      this.$nacelleApollo.getPage(
+        this.handle,
+        this.$apollo,
+        {
+          error: () => {
+            this.$nacelleHelpers.debugLog('No page data.')
+          }
+        }
+      )
+    }
+  },
+  methods: {
+    pageError () {
+      this.$nuxt.error({ statusCode: 404, message: 'Page does not exist' })
+    }
+  }
 }
 </script>

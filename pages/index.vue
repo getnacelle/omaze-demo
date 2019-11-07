@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <div v-if="$apollo.loading">Loading...</div>
     <!-- Begin editing your homepage here -->
     <div v-if="!hasPageData">
       <content-hero-banner
@@ -100,15 +99,25 @@
 
 <script>
 import { mapState } from 'vuex'
-import { getPage } from '@nacelle/nacelle-graphql-queries-mixins'
+import { fetchStatic } from '@nacelle/nacelle-tools'
 
 export default {
   data() {
     return {
-      handle: 'homepage'
+      handle: 'homepage',
+      page: null,
+      collection: null
     }
   },
-  mixins: [getPage],
+  async asyncData(context) {
+    const pageData = await fetchStatic.pageData('homepage', context)
+    const collectionData = await fetchStatic.collectionData('homepage', context)
+      
+    return {
+      ...pageData,
+      ...collectionData
+    }
+  },
   computed: {
     ...mapState('space', ['name']),
     hasPageData() {
@@ -129,6 +138,47 @@ export default {
 
         return false
       }
+    },
+    products () {
+      if (
+        this.collection &&
+        this.collection.products &&
+        Array.isArray(this.collection.products)
+      ) {
+        return this.collection.products
+      }
+
+      return []
+    }
+  },
+  created () {
+    if (!this.collection && !this.noCollectionData) {
+      this.$nacelleApollo.getCollection(
+        this.handle,
+        this.$apollo,
+        {
+          error: () => {
+            this.$nacelleHelpers.debugLog('No collection data.')
+          }
+        }
+      )
+    }
+
+    if (!this.page && !this.noPageData) {
+      this.$nacelleApollo.getPage(
+        this.handle,
+        this.$apollo,
+        {
+          error: () => {
+            this.$nacelleHelpers.debugLog('No page data.')
+          }
+        }
+      )
+    }
+  },
+  methods: {
+    pageError () {
+      this.$nuxt.error({ statusCode: 404, message: 'Homepage does not exist' })
     }
   }
 }

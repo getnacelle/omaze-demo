@@ -8,8 +8,8 @@
             {{ timeRemaining }}
           </div>
           <page-content 
-            v-if="product"
-            :page="product.content"
+            v-if="content"
+            :page="content"
             :products="[product]"
           >
             <template v-slot:section="{ section }">
@@ -58,10 +58,8 @@
 import { mapMutations, mapGetters } from 'vuex'
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
 import formatDistance from 'date-fns/formatDistance'
-import gql from 'graphql-tag'
-import { getProduct } from '@nacelle/nacelle-graphql-queries-mixins'
+import { fetchStatic } from '@nacelle/nacelle-tools'
 import productMetafields from '@nacelle/nacelle-vue-components/dist/mixins/productMetafields'
-import transformEdges from '~/plugins/utils/transformEdges.js'
 import ProductDetails from '~/components/ProductDetails'
 import CarouselContent from '~/components/CarouselContent'
 import TextContent from '~/components/TextContent'
@@ -77,31 +75,31 @@ export default {
   },
   data() {
     return {
-      product: null
+      handle: this.$route.params.handle,
+      product: null,
+      content: null
     }
   },
   computed: {
     ...mapGetters('space', ['getMetatag']),
     legal () {
       if (
-        this.product &&
-        this.product.content &&
-        this.product.content.fields &&
-        this.product.content.fields.legal
+        this.content &&
+        this.content.fields &&
+        this.content.fields.legal
       ) {
-        return documentToHtmlString(this.product.content.fields.legal)
+        return documentToHtmlString(this.content.fields.legal)
       }
 
       return ''
     },
     endDate () {
       if (
-        this.product &&
-        this.product.content &&
-        this.product.content.fields &&
-        this.product.content.fields.contestEndDate
+        this.content &&
+        this.content.fields &&
+        this.content.fields.contestEndDate
       ) {
-        return this.product.content.fields.contestEndDate
+        return this.content.fields.contestEndDate
       }
 
       return Date.now()
@@ -113,19 +111,34 @@ export default {
       )
     }
   },
-  methods: {
-    ...mapMutations('cart', ['showCart'])
-  },
+  async asyncData(context) {
+    const { params } = context
+    const { handle } = params
+    const productData = await fetchStatic.productData(handle, context)
+    const content = await context.app.$nacelle.content(handle, 'product')
 
-  async asyncData({ params, app, payload }) {
-    if (payload) {
-      const { variants, media, ...rest } = payload
-      const transformedProduct = {
-        variants: variants ? transformEdges(variants) : [],
-        media: media ? transformEdges(media) : [],
-        ...rest
-      }
-      return { product: transformedProduct }
+    return {
+      ...productData,
+      content
+    }
+  },
+  created() {
+    if (!this.product && !this.noProductData) {
+      this.$nacelleApollo.getProduct(
+        this.handle,
+        this.$apollo,
+        {
+          error: () => {
+            this.$nacelleHelpers.debugLog('No product data.')
+          }
+        }
+      )
+    }
+  },
+  methods: {
+    ...mapMutations('cart', ['showCart']),
+    pageError () {
+      this.$nuxt.error({ statusCode: 404, message: 'Product page does not exist' })
     }
   },
   head() {
@@ -174,17 +187,6 @@ export default {
         ...properties,
         meta
       }
-    }
-  },
-  created() {
-    if (process.browser) {
-      getProduct({
-        apollo: this.$apollo,
-        params: this.$route.params,
-        store: this.$store,
-        nuxt: this.$nuxt,
-        context: 'component'
-      })
     }
   }
 }
